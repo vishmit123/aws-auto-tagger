@@ -30,14 +30,7 @@ def lambda_handler(event, context):
 def attach_tags(resource_id, responseElements, resource):
     existing_tags = []
     tags = []
-    tags.append({"Key": "Adobe.ArchPath", "Value": "ACP-CS.service.asset-events"})
-    tags.append({"Key": "Adobe.CostCenter", "Value": "101391"})
-    tags.append({"Key": "Adobe.DataClassification", "Value": "Internal"})
-    tags.append({"Key": "Adobe.Environment", "Value": "Stage"})
-    tags.append({"Key": "Adobe.Owner", "Value": "Adobe Cloud Platform - asset-events"})
-    tags.append({"Key": "Adobe.PCIData", "Value": "false"})
-    tags.append({"Key": "Adobe.PciAccount", "Value": "false"})
-    tags.append({"Key": "Adobe.SKMSServiceID", "Value": "test"})
+    tags.append({"Key": "Org", "Value": "Dev"})
 
     if 'tagSet' in responseElements[resource]:
         existing_tags = responseElements[resource]['tagSet']['items']
