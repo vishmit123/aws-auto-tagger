@@ -1,4 +1,3 @@
-
 import json
 import boto3
 import sys
@@ -6,7 +5,7 @@ REGION="us-east-1"
 
 def lambda_handler(event, context):
     #attach_tags(event['detail']['responseElements']['vpc']['vpcId'])
-    #print(event['detail'])
+    print(event['detail'])
     eventName = event['detail']['eventName']
     resource = ""
     resourceId = ""
@@ -33,14 +32,16 @@ def attach_tags(resource_id, responseElements, resource):
     tags.append({"Key": "Org", "Value": "Dev"})
 
     if 'tagSet' in responseElements[resource]:
-        existing_tags = responseElements[resource]['tagSet']['items']
-        existing_tags = {i['key']: i['value'] for i in existing_tags}
-        if 'Name' in existing_tags and existing_tags['Name']!= "":
-            tags.append({"Key": "Name", "Value": existing_tags['Name']})
-        elif 'name' in existing_tags and existing_tags['name']!= "":
-            tags.append({"Key": "name", "Value": existing_tags['name']})
-        else:
-            tags.append({"Key": "Name", "Value": resource_id})
+        if 'items' in responseElements[resource]['tagSet']:
+            existing_tags = responseElements[resource]['tagSet']['items']
+            existing_tags = {i['key']: i['value'] for i in existing_tags}
+            print(existing_tags)
+            if 'Name' in existing_tags and existing_tags['Name']!= "":
+                tags.append({"Key": "Name", "Value": existing_tags['Name']})
+            elif 'name' in existing_tags and existing_tags['name']!= "":
+                tags.append({"Key": "name", "Value": existing_tags['name']})
+            else:
+                tags.append({"Key": "Name", "Value": resource_id})
     else:
         tags.append({"Key": "Name", "Value": resource_id})
 
