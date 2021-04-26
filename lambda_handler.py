@@ -18,8 +18,10 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': json.dumps('Error in AutoTagger!!')
         }
-    
-    attach_tags(event['detail']['responseElements'][resource][resourceId], event['detail']['responseElements'], resource)
+    if eventName == "CreateVolume":
+        attach_tags(event['detail']['responseElements'][resourceId], event['detail']['responseElements'], resource)
+    else:
+        attach_tags(event['detail']['responseElements'][resource][resourceId], event['detail']['responseElements'], resource)
         
     return {
         'statusCode': 200,
@@ -30,6 +32,7 @@ def attach_tags(resource_id, responseElements, resource):
     existing_tags = []
     tags = []
     tags.append({"Key": "Org", "Value": "Dev"})
+
 
     if 'tagSet' in responseElements[resource]:
         if 'items' in responseElements[resource]['tagSet']:
