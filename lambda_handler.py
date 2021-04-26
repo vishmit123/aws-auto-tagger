@@ -19,24 +19,23 @@ def lambda_handler(event, context):
             'body': json.dumps('Error in AutoTagger!!')
         }
     if eventName == "CreateVolume":
-        attach_tags(event['detail']['responseElements'][resourceId], event['detail']['responseElements'], resource)
+        attach_tags(event['detail']['responseElements'][resourceId], event['detail']['responseElements'])
     else:
-        attach_tags(event['detail']['responseElements'][resource][resourceId], event['detail']['responseElements'], resource)
+        attach_tags(event['detail']['responseElements'][resource][resourceId], event['detail']['responseElements'][resource])
         
     return {
         'statusCode': 200,
         'body': json.dumps('Hello from AutoTagger!!')
     }
     
-def attach_tags(resource_id, responseElements, resource):
+def attach_tags(resource_id, responseElements):
     existing_tags = []
     tags = []
     tags.append({"Key": "Org", "Value": "Dev"})
 
-
-    if 'tagSet' in responseElements[resource]:
-        if 'items' in responseElements[resource]['tagSet']:
-            existing_tags = responseElements[resource]['tagSet']['items']
+    if 'tagSet' in responseElements:
+        if 'items' in responseElements['tagSet']:
+            existing_tags = responseElements['tagSet']['items']
             existing_tags = {i['key']: i['value'] for i in existing_tags}
             print(existing_tags)
             if 'Name' in existing_tags and existing_tags['Name']!= "":
@@ -45,6 +44,8 @@ def attach_tags(resource_id, responseElements, resource):
                 tags.append({"Key": "name", "Value": existing_tags['name']})
             else:
                 tags.append({"Key": "Name", "Value": resource_id})
+        else:
+            tags.append({"Key": "Name", "Value": resource_id})
     else:
         tags.append({"Key": "Name", "Value": resource_id})
 
